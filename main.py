@@ -14,7 +14,7 @@ from tkinter import ttk, scrolledtext
 
 
 # Set a proper User-Agent for NOAA API requests
-HEADERS = {"User-Agent": "weather-data-retrieval-script (example@example.com)"}
+HEADERS = {"User-Agent": "weather-data-retrieval-script (joshua.kujawa16@outlook.com)"}
 
 def get_location():
     g = geocoder.ip('me')
@@ -260,23 +260,49 @@ base_tags = {
     'x': {'label': 'Calm Conditons', 'point': [0, 0]}
 }
 
-def spiral_position_from_vector(vector, humidity, pressure, temp, wind):
-    # Normalize inputs
+def normalize_inputs(humidity, pressure, temp, wind):
     norm_humidity = max(min(humidity / 100.0, 1.0), 0.01)
-    norm_temp = (temp * humidity) / pressure
-    norm_wind = (wind * humidity) / pressure
+    norm_pressure = pressure / 1013.25
+    norm_temp = max(min((temp - 32) / 68.0, 1.5), 0.0)
+    norm_wind = max(min(wind / 15.0, 2.0), 0.0)
 
-    # Spiral logic
-    r = norm_humidity * norm_temp
-    theta = 2 * math.pi * norm_wind
+    volatility = norm_temp * (1.0 - norm_pressure) * norm_humidity
+    spiral_speed = norm_wind * norm_humidity
 
-    # Spiral outputs (not biased yet)
-    spiral_x = r * math.cos(theta)
-    spiral_y = r * math.sin(theta)
+    return norm_humidity, norm_temp, norm_pressure, norm_wind, volatility, spiral_speed
 
-    # Now scale the spiral by the condition vector
-    x = vector[0] * spiral_x 
-    y = vector[1] * spiral_y 
+
+def spiral_position_within_quadrant(center, humidity, pressure, temp, wind, t=1.0):
+    """
+    Generates a spiral path that rotates around a direction vector from the center.
+    The chaos vector [x, y] represents the direction and strength of weather instability.
+    """
+    # Normalize and derive chaos properties
+    norm_humidity, norm_temp, norm_pressure, norm_wind, volatility, spiral_speed = normalize_inputs(humidity, pressure, temp, wind)
+
+    # --- STEP 1: Chaos vector [x, y] ---
+    # Think of this as where chaos *wants* to go
+    chaos_strength = volatility * 2.0  # Chaos gets stronger with volatility
+    chaos_angle = math.pi * (norm_wind - 0.5) * 2  # From -π to π based on wind
+    
+    chaos_x = chaos_strength * math.cos(chaos_angle)
+    chaos_y = chaos_strength * math.sin(chaos_angle)
+
+    # This chaos vector tells us direction and magnitude of instability
+    chaos_vector = [chaos_x, chaos_y]
+
+    # --- STEP 2: Radius around chaos vector ---
+    # Shrinking spiral radius like a drain
+    decay = 0.25 + norm_humidity * 0.5
+    base_radius = 1.2 + volatility
+    r = max(base_radius * math.exp(-decay * t), 0.05)
+
+    # Spin angle: speed depends on wind & humidity
+    theta = 2 * math.pi * spiral_speed * t
+
+    # Rotate around the chaos vector
+    x = center[0] + chaos_vector[0] + r * math.cos(theta)
+    y = center[1] + chaos_vector[1] + r * math.sin(theta)
 
     return x, y
 
@@ -309,7 +335,7 @@ def chart_run(data_list, date_str, time_str):
     
     zone = classify_conditions(current_temp, current_humidity, current_pressure, current_wind)
     direction_vector = base_tags[zone]['point']
-    spiral_x, spiral_y = spiral_position_from_vector(direction_vector, current_humidity, current_pressure, current_temp, current_wind)
+    spiral_x, spiral_y = spiral_position_within_quadrant(direction_vector, current_humidity, current_pressure, current_temp, current_wind)
     chart = plt.figure(figsize=(8, 8))
     for key, info in base_tags.items():
         plt.scatter(*info['point'], label=f"{key.upper()}: {info['label']}", s=100)
@@ -357,16 +383,41 @@ def display_data(window, data_list):
 
     columns = list(data_list[0].keys())
 
-    tree = ttk.Treeview(window, columns=columns, show='headings', height=20)
+    # Create a frame to hold both the Treeview and scrollbars
+    frame = tk.Frame(window)
+    frame.pack(padx=10, pady=10, fill='both', expand=True)
+
+    # Create vertical and horizontal scrollbars
+    vsb = ttk.Scrollbar(frame, orient='vertical')
+    hsb = ttk.Scrollbar(frame, orient='horizontal')
+
+    # Create the Treeview with scroll command bindings
+    tree = ttk.Treeview(
+        frame,
+        columns=columns,
+        show='headings',
+        yscrollcommand=vsb.set,
+        xscrollcommand=hsb.set
+    )
+
+    # Attach scrollbars to Treeview
+    vsb.config(command=tree.yview)
+    hsb.config(command=tree.xview)
+
+    vsb.pack(side='right', fill='y')
+    hsb.pack(side='bottom', fill='x')
+    tree.pack(side='left', fill='both', expand=True)
+
+    # Configure Treeview columns
     for col in columns:
         tree.heading(col, text=col)
         tree.column(col, width=140, anchor='center')
 
+    # Insert data
     for row in data_list:
         values = [row[col] for col in columns]
         tree.insert('', tk.END, values=values)
 
-    tree.pack(padx=10, pady=10, fill='both', expand=True)
 
 def main():
     try:
