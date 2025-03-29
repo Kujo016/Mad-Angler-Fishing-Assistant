@@ -39,7 +39,7 @@ sudo apt install python3 python3-pip
 ### 2. Clone This Repository
 
 ```bash
-git clone https://github.com/Kujo016 Mad-Angler-Weather-Log-and-Fishing-Assistant
+git clone https://github.com/Kujo016/Mad-Angler-Fishing-Assistant
 cd YOUR_REPO_NAME
 ```
 
