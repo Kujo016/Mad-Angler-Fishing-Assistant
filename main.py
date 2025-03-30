@@ -272,39 +272,53 @@ def normalize_inputs(humidity, pressure, temp, wind):
     return norm_humidity, norm_temp, norm_pressure, norm_wind, volatility, spiral_speed
 
 
-def spiral_position_within_quadrant(center, humidity, pressure, temp, wind, t=1.0):
+def spiral_position_within_quadrant(center, humidity, pressure, temp, wind, t=1.0, scale=10.0):
     """
-    Generates a spiral path that rotates around a direction vector from the center.
-    The chaos vector [x, y] represents the direction and strength of weather instability.
-    """
-    # Normalize and derive chaos properties
-    norm_humidity, norm_temp, norm_pressure, norm_wind, volatility, spiral_speed = normalize_inputs(humidity, pressure, temp, wind)
-
-    # --- STEP 1: Chaos vector [x, y] ---
-    # Think of this as where chaos *wants* to go
-    chaos_strength = volatility * 2.0  # Chaos gets stronger with volatility
-    chaos_angle = math.pi * (norm_wind - 0.5) * 2  # From -π to π based on wind
+    Generates a spiral path that rotates around a chaos vector and migrates outward from the center
+    based on weather instability and directional tension.
     
-    chaos_x = chaos_strength * math.cos(chaos_angle)
-    chaos_y = chaos_strength * math.sin(chaos_angle)
+    center: (x, y) graph center
+    scale: max migration distance from center
+    t: spiral time step
+    """
+    # STEP 0: Normalize inputs and extract properties
+    norm_humidity, norm_temp, norm_pressure, norm_wind, volatility, spiral_speed = normalize_inputs(
+        humidity, pressure, temp, wind
+    )
 
-    # This chaos vector tells us direction and magnitude of instability
-    chaos_vector = [chaos_x, chaos_y]
+    # STEP 1: Chaos vector [x, y] — direction of instability
+    chaos_strength = volatility * 2.0
+    chaos_angle = math.pi * (norm_wind - 0.5) * 2  # -π to π
+    chaos_vector = [
+        chaos_strength * math.cos(chaos_angle),
+        chaos_strength * math.sin(chaos_angle),
+    ]
 
-    # --- STEP 2: Radius around chaos vector ---
-    # Shrinking spiral radius like a drain
+    # STEP 2: Compute directional center vector (migration vector)
+    # Use angle to determine direction from center, and tension to determine how far
+    tension = (norm_humidity + norm_temp + (1 - norm_pressure) + norm_wind) / 4
+    offset_distance = (0.5 + volatility) * tension * scale  # max ~scale * 1.5
+
+    # Use same angle as chaos for now, but you could modify this too
+    center_vector = [
+        offset_distance * math.cos(chaos_angle),
+        offset_distance * math.sin(chaos_angle),
+    ]
+
+    # STEP 3: Spiral radius decay and angle
     decay = 0.25 + norm_humidity * 0.5
     base_radius = 1.2 + volatility
-    r = max(base_radius * math.exp(-decay * t), 0.05)
+    r = base_radius * (1 - math.exp(-decay * t))
 
-    # Spin angle: speed depends on wind & humidity
-    theta = 2 * math.pi * spiral_speed * t
 
-    # Rotate around the chaos vector
-    x = center[0] + chaos_vector[0] + r * math.cos(theta)
-    y = center[1] + chaos_vector[1] + r * math.sin(theta)
+    theta = -2 * math.pi * spiral_speed * t
+
+    # Final spiral position: migrate + chaos + spiral
+    x = center[0] + center_vector[0] + chaos_vector[0] + r * math.cos(theta)
+    y = center[1] + center_vector[1] + chaos_vector[1] + r * math.sin(theta)
 
     return x, y
+
 
 
 def classify_conditions(temp, humidity, pressure, wind):
@@ -335,14 +349,40 @@ def chart_run(data_list, date_str, time_str):
     
     zone = classify_conditions(current_temp, current_humidity, current_pressure, current_wind)
     direction_vector = base_tags[zone]['point']
-    spiral_x, spiral_y = spiral_position_within_quadrant(direction_vector, current_humidity, current_pressure, current_temp, current_wind)
+
+    # Generate the spiral trail
+    spiral_trail = []
+    t_steps = 100  # number of points in the spiral trail
+    for t in range(t_steps):
+        point = spiral_position_within_quadrant(
+            direction_vector,
+            current_humidity,
+            current_pressure,
+            current_temp,
+            current_wind,
+            t=t / 10.0  # make t float: smoother spiral
+        )
+        spiral_trail.append(point)
+
+    # Final spiral point for red marker
+    spiral_x, spiral_y = spiral_trail[-1]
+
+    # Begin chart drawing
     chart = plt.figure(figsize=(8, 8))
+
+    # Plot base zones
     for key, info in base_tags.items():
         plt.scatter(*info['point'], label=f"{key.upper()}: {info['label']}", s=100)
         plt.text(info['point'][0]+0.05, info['point'][1]+0.05, key.upper(), fontsize=12)
 
+    # Plot spiral trail (blue line)
+    trail_x, trail_y = zip(*spiral_trail)
+    plt.plot(trail_x, trail_y, color='blue', linewidth=2, label='Spiral Path')
+
+    # Final spiral point in red
     plt.scatter(spiral_x, spiral_y, color='red', edgecolor='black', s=200, label='Current Condition (Spiral)')
 
+    # Axes and labels
     plt.axhline(0, color='black', linewidth=0.5)
     plt.axvline(0, color='black', linewidth=0.5)
     plt.title("Fishing Condition Map")
@@ -352,7 +392,10 @@ def chart_run(data_list, date_str, time_str):
     plt.legend()
     plt.axis('equal')
     plt.tight_layout()
-    fig_plot_path = os.path.join('plots', date_str, time_str, 'chart_plot.png')
+
+    # Save and show
+    fig_plot_path = os.path.join('AI', 'targetFile', 'plots', date_str, time_str, 'chart_plot.png')
+    os.makedirs(os.path.dirname(fig_plot_path), exist_ok=True)
     plt.savefig(fig_plot_path)
     plt.show(block=False)
     plt.pause(0.1)
