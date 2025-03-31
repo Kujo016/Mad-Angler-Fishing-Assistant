@@ -322,24 +322,56 @@ def spiral_position_within_quadrant(center, humidity, pressure, temp, wind, t=1.
 
 
 def classify_conditions(temp, humidity, pressure, wind):
+    # Handle missing data
+    if None in (temp, humidity, pressure, wind):
+        print("Incomplete data: One or more weather parameters are missing.")
+        return 'x'  # Unknown due to incomplete data
+
+
+    # Normalize inputs (just in case they're strings)
+    try:
+        temp = float(temp)
+        humidity = float(humidity)
+        pressure = float(pressure)
+        wind = float(wind)
+    except ValueError:
+        return 'x'  # Unknown due to invalid data
+
+    # Ideal dry and cool morning
     if 55 <= temp <= 65 and wind < 10 and pressure >= 1015 and humidity < 30:
         return 'a'
+    
+    # Mild and stable conditions
     elif 60 <= temp <= 75 and 40 <= humidity <= 70 and pressure >= 1010 and 5 <= wind <= 15:
         return 'b'
+
+    # Warm and humid with rising wind and low pressure (potential stormy or hot-bite window)
     elif 70 <= temp <= 80 and humidity > 60 and wind >= 15 and pressure < 1010:
         return 'c'
-    elif temp > 80 or temp < 40 or wind > 25 or humidity > 85 or humidity < 20 or pressure < 1005:
+
+    # Harsh conditions — hot, cold, windy, dry, humid, or low pressure
+    elif temp > 85 or temp < 35 or wind > 25 or humidity > 90 or humidity < 15 or pressure < 1000:
         return 'd'
+
+    # Cool, crisp conditions, ideal for early morning bites
     elif 50 <= temp <= 60 and 30 <= humidity <= 50 and wind <= 12 and pressure >= 1010:
         return 'e'
+
+    # Calm and humid — could be good for topwater action
     elif 65 <= temp <= 72 and 60 <= humidity <= 80 and pressure >= 1012 and wind <= 5:
         return 'f'
+
+    # Post-front humidity spike, moderate wind, mid pressure
     elif 60 <= temp <= 70 and humidity > 70 and 10 <= wind <= 18 and 1005 <= pressure <= 1010:
         return 'g'
+
+    # Crisp and damp morning, often productive in fall/spring
     elif 45 <= temp <= 55 and 40 <= humidity <= 70 and 1005 <= pressure <= 1015:
         return 'h'
-    else:
-        return 'x'
+
+    # Default unknown or average conditions
+    return 'x'
+
 
 def chart_run(data_list, date_str, time_str):
     current_temp = data_list[2]['temperature (F)'] 
