@@ -125,7 +125,55 @@ def retrieve_observations(station_id, max_results=50):
             "fishing_note": fish_note,
             "pressure_trend": pressure_trend
         })
+        if not temp_temp:
+            print(f"Missing temperature at {timestamp}")
+        if not pressure:
+            print(f"Missing pressure at {timestamp}")
+        if not wind_speed:
+            print(f"Missing wind speed at {timestamp}")
+
+    
+    print(f"Retrieved {len(observations)} raw observations from station.")
+    
     return data_list
+
+def get_last_known_data_var():
+    base_path = os.path.join('plots')
+    if not os.path.exists(base_path):
+        print("No saved plots directory found.")
+        return None, None, {}
+
+    # Find latest date and time folder
+    latest_date = sorted(os.listdir(base_path))[-1]
+    latest_time = sorted(os.listdir(os.path.join(base_path, latest_date)))[-1]
+    csv_path = os.path.join(base_path, latest_date, latest_time, 'weather_data.csv')
+
+    if not os.path.isfile(csv_path):
+        print("No weather data CSV found in the latest folder.")
+        return None, None, {}
+
+    with open(csv_path, 'r', encoding='utf-8-sig') as f:
+        reader = csv.DictReader(f)
+        for row in reversed(list(reader)):
+            try:
+                temp = float(row['temperature (F)'])
+                humidity = float(row['humidity (%)'])
+                pressure = float(row['barometric_pressure (hPa)'])
+                wind = float(row['wind_speed (m/s)'])
+                if None not in (temp, humidity, pressure, wind):
+                    print(f"Recovered valid data from last known row at {latest_date} {latest_time}")
+                    return latest_date, latest_time, {
+                        'temperature': temp,
+                        'humidity': humidity,
+                        'pressure': pressure,
+                        'wind': wind
+                    }
+            except (ValueError, TypeError):
+                continue
+
+    print("No valid row with complete weather data found.")
+    return None, None, {}
+
 
 def save_to_csv(data_list, filename):
     fieldnames = [
@@ -374,10 +422,24 @@ def classify_conditions(temp, humidity, pressure, wind):
 
 
 def chart_run(data_list, date_str, time_str):
-    current_temp = data_list[2]['temperature (F)'] 
+    current_temp = data_list[2]['temperature (F)']
     current_humidity = data_list[3]['humidity (%)']
     current_pressure = data_list[4]['barometric_pressure (hPa)']
     current_wind = data_list[6]['wind_speed (m/s)']
+
+    if None in (current_temp, current_humidity, current_pressure, current_wind):
+        print("Missing data detected. Attempting to recover from last known valid entry...")
+        last_date, last_time, recovered = get_last_known_data_var()
+        if recovered:
+            current_temp = recovered['temperature']
+            current_humidity = recovered['humidity']
+            current_pressure = recovered['pressure']
+            current_wind = recovered['wind']
+            date_str = last_date or date_str
+            time_str = last_time or time_str
+        else:
+            print("Failed to recover valid data. Aborting chart rendering.")
+            return
     
     zone = classify_conditions(current_temp, current_humidity, current_pressure, current_wind)
     direction_vector = base_tags[zone]['point']
@@ -426,7 +488,7 @@ def chart_run(data_list, date_str, time_str):
     plt.tight_layout()
 
     # Save and show
-    fig_plot_path = os.path.join('AI', 'targetFile', 'plots', date_str, time_str, 'chart_plot.png')
+    fig_plot_path = os.path.join('plots', date_str, time_str, 'chart_plot.png')
     os.makedirs(os.path.dirname(fig_plot_path), exist_ok=True)
     plt.savefig(fig_plot_path)
     plt.show(block=False)
@@ -513,6 +575,10 @@ def main():
         output_dir = os.path.join('plots', date_str, time_str)
         os.makedirs(output_dir, exist_ok=True)
         csv_filename = os.path.join(output_dir, 'weather_data.csv')
+
+        print(f"Data rows retrieved: {len(data_list)}")
+
+
         save_to_csv(data_list, filename=csv_filename)
         print(f"Saving all output to: {output_dir}")
         # Plot using those values
