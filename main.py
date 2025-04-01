@@ -11,6 +11,9 @@ from zoneinfo import ZoneInfo
 import tzlocal 
 import tkinter as tk
 from tkinter import ttk, scrolledtext
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.animation as animation
+from PIL import Image
 
 
 # Set a proper User-Agent for NOAA API requests
@@ -420,15 +423,107 @@ def classify_conditions(temp, humidity, pressure, wind):
     # Default unknown or average conditions
     return 'x'
 
+def chart_gif(data_list, date_str, time_str):
+   
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    line, = ax.plot([], [], lw=2, color='blue')
+    point_marker, = ax.plot([], [], 'ro', markersize=8)
+
+    ax.axhline(0, color='black', linewidth=0.5)
+    ax.axvline(0, color='black', linewidth=0.5)
+    
+    ax.set_xlabel("Condition Axis")
+    ax.set_ylabel("Activity Axis")
+    ax.grid(True)
+    ax.axis('equal')
+
+    # Plot base zones
+    for key, info in base_tags.items():
+        ax.scatter(*info['point'], label=f"{key.upper()}: {info['label']}", s=100)
+        ax.text(info['point'][0]+0.05, info['point'][1]+0.05, key.upper(), fontsize=12)
+    
+    ax.set_xlim(-5, 5)
+    ax.set_ylim(-5, 5)
+
+    # Find latest valid data row
+    sorted_rows = sorted(data_list, key=lambda r: f"{r['date']} {r['time']}", reverse=True)
+    for row in sorted_rows:
+        try:
+            current_temp = float(row['temperature (F)'])
+            current_humidity = float(row['humidity (%)'])
+            current_pressure = float(row['barometric_pressure (hPa)'])
+            current_wind = float(row['wind_speed (m/s)'])
+            if all(val is not None for val in (current_temp, current_humidity, current_pressure, current_wind)):
+                break
+        except (ValueError, TypeError):
+            continue
+    else:
+        print("No complete weather data found. Aborting GIF rendering.")
+        return
+
+    ax.set_title(f"Fishing Condition Spiral GIF\n{row['date']} {row['time']}")
+    zone = classify_conditions(current_temp, current_humidity, current_pressure, current_wind)
+    direction_vector = base_tags[zone]['point']
+
+    # Generate spiral trail
+    spiral_trail = []
+    t_steps = 100
+    for t in range(t_steps):
+        point = spiral_position_within_quadrant(
+            direction_vector,
+            current_humidity,
+            current_pressure,
+            current_temp,
+            current_wind,
+            t=t / 10.0
+        )
+        spiral_trail.append(point)
+
+    def init():
+        line.set_data([], [])
+        point_marker.set_data([], [])
+        return line, point_marker
+
+    def animate(i):
+        if i == 0:
+            return line, point_marker
+        x_vals, y_vals = zip(*spiral_trail[:i+1])
+        line.set_data(x_vals, y_vals)
+        point_marker.set_data([x_vals[-1]], [y_vals[-1]])
+        return line, point_marker
+
+    # Disable blit for better compatibility with text/axes
+    ani = animation.FuncAnimation(
+        fig, animate,
+        frames=len(spiral_trail),
+        init_func=init,
+        blit=False,
+        interval=50
+    )
+
+    gif_dir = os.path.join('plots', date_str, time_str)
+    os.makedirs(gif_dir, exist_ok=True)
+    gif_path = os.path.join(gif_dir, 'spiral_chart.gif')
+    ani.save(gif_path, writer='pillow')
+    plt.close()
+    print(f"GIF saved to {gif_path}")
 
 def chart_run(data_list, date_str, time_str):
-    current_temp = data_list[2]['temperature (F)']
-    current_humidity = data_list[3]['humidity (%)']
-    current_pressure = data_list[4]['barometric_pressure (hPa)']
-    current_wind = data_list[6]['wind_speed (m/s)']
-
-    if None in (current_temp, current_humidity, current_pressure, current_wind):
-        print("Missing data detected. Attempting to recover from last known valid entry...")
+    # Find the latest complete row from the end of the list
+    sorted_rows = sorted(data_list, key=lambda r: f"{r['date']} {r['time']}", reverse=True)
+    for row in sorted_rows:
+        try:
+            current_temp = float(row['temperature (F)'])
+            current_humidity = float(row['humidity (%)'])
+            current_pressure = float(row['barometric_pressure (hPa)'])
+            current_wind = float(row['wind_speed (m/s)'])
+            if all(val is not None for val in (current_temp, current_humidity, current_pressure, current_wind)):
+                break
+        except (ValueError, TypeError):
+            continue
+    else:
+        print("Missing or incomplete data. Attempting to recover from last known valid entry...")
         last_date, last_time, recovered = get_last_known_data_var()
         if recovered:
             current_temp = recovered['temperature']
@@ -440,13 +535,13 @@ def chart_run(data_list, date_str, time_str):
         else:
             print("Failed to recover valid data. Aborting chart rendering.")
             return
-    
+
     zone = classify_conditions(current_temp, current_humidity, current_pressure, current_wind)
     direction_vector = base_tags[zone]['point']
 
     # Generate the spiral trail
     spiral_trail = []
-    t_steps = 100  # number of points in the spiral trail
+    t_steps = 100
     for t in range(t_steps):
         point = spiral_position_within_quadrant(
             direction_vector,
@@ -454,11 +549,10 @@ def chart_run(data_list, date_str, time_str):
             current_pressure,
             current_temp,
             current_wind,
-            t=t / 10.0  # make t float: smoother spiral
+            t=t / 10.0
         )
         spiral_trail.append(point)
 
-    # Final spiral point for red marker
     spiral_x, spiral_y = spiral_trail[-1]
 
     # Begin chart drawing
@@ -469,17 +563,15 @@ def chart_run(data_list, date_str, time_str):
         plt.scatter(*info['point'], label=f"{key.upper()}: {info['label']}", s=100)
         plt.text(info['point'][0]+0.05, info['point'][1]+0.05, key.upper(), fontsize=12)
 
-    # Plot spiral trail (blue line)
+    # Plot spiral trail and final point
     trail_x, trail_y = zip(*spiral_trail)
     plt.plot(trail_x, trail_y, color='blue', linewidth=2, label='Spiral Path')
-
-    # Final spiral point in red
     plt.scatter(spiral_x, spiral_y, color='red', edgecolor='black', s=200, label='Current Condition (Spiral)')
 
     # Axes and labels
     plt.axhline(0, color='black', linewidth=0.5)
     plt.axvline(0, color='black', linewidth=0.5)
-    plt.title("Fishing Condition Map")
+    plt.title(f"Fishing Condition Map\n{row['date']} {row['time']}")
     plt.xlabel("Condition Axis (Worst to Best Conditions)")
     plt.ylabel("Activity Axis (Least to Most Active)")
     plt.grid(True)
@@ -593,8 +685,12 @@ def main():
         title = tk.Label(root, text="Latest Fishing Conditions Report", font=("Helvetica", 18, "bold"))
         title.pack(pady=10)
 
+        #Load Table
         data = load_latest_data()
         display_data(root, data)
+
+        #Save Chart as GIF
+        chart_gif(data_list, date_str, time_str)
 
         root.mainloop()
 

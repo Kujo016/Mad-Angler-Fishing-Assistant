@@ -1,0 +1,51 @@
+﻿date,time,temperature (F),humidity (%),barometric_pressure (hPa),weather,wind_speed (m/s),wind_direction (°),dew_point (F),visibility (mi),cloud_cover,ceiling (ft),heat_index (F),wind_chill (F),precipitation_last_hour (in),station_elevation (ft),station_name,species_target,estimated_water_temp (F),fishing_note,pressure_trend
+2025-04-01,07:53,35.06,11.320269559122105,1007.1,,0,0,33.08,9.997862483098704,,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",35.1,Cold front – slow retrieves deep.,N/A
+2025-04-01,06:53,35.06,11.320269559122105,1006.8,Mostly Cloudy,0,0,33.08,9.997862483098704,BKN,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",35.1,Cold front – slow retrieves deep.,Falling
+2025-04-01,05:53,33.98,11.510290304820192,1006.4,Mostly Cloudy,0,0,32.0,9.997862483098704,FEW,,,,0.0,2867.45416,KBOI,"Warmwater (e.g., bass)",34.0,Cold front – slow retrieves deep.,Falling
+2025-04-01,03:53,35.96,10.771542709162144,1006.4,Light Rain,11.16,350,33.08,9.997862483098704,BKN,,,30.31089357718,0.0,2867.45416,KBOI,"Warmwater (e.g., bass)",30.4,Cold front – slow retrieves deep.,Falling
+2025-04-01,02:53,37.04,10.152344229687454,1006.1,Cloudy,,,33.08,9.997862483098704,BKN,,,,0.0,2867.45416,KBOI,"Warmwater (e.g., bass)",37.0,Cold front – slow retrieves deep.,Falling
+2025-04-01,02:03,35.96,10.771542709162144,1006.1,Light Rain,12.96,210,33.08,7.002853336514754,FEW,,,29.638282832166,0.0,2867.45416,KBOI,"Warmwater (e.g., bass)",29.5,Cold front – slow retrieves deep.,Falling
+2025-04-01,00:53,35.06,11.320269559122105,1005.8,Cloudy,18.36,150,33.08,9.997862483098704,OVC,,,26.880398566620002,0.0,2867.45416,KBOI,"Warmwater (e.g., bass)",25.9,Cold front – slow retrieves deep.,Falling
+2025-03-31,23:57,,,1006.1,Rain and Fog/Mist,18.36,210,33.08,3.001222858506323,BKN,,,,0.0,2867.45416,KBOI,"Warmwater (e.g., bass)",50.8,Cold front – slow retrieves deep.,Rising
+2025-03-31,22:53,42.08,7.418297973693234,1004.8,Cloudy,14.76,140,32.0,9.997862483098704,BKN,,,36.573371916322,,2867.45416,KBOI,"Warmwater (e.g., bass)",34.7,Cold front – slow retrieves deep.,Falling
+2025-03-31,21:53,42.08,7.101674543991478,1004.4,Clear,14.76,130,30.92,9.997862483098704,CLR,,,36.573371916322,,2867.45416,KBOI,"Warmwater (e.g., bass)",34.7,Cold front – slow retrieves deep.,Falling
+2025-03-31,20:53,42.980000000000004,6.773759739495929,1004.4,,5.4,170,30.92,9.997862483098704,,,,41.362377984461,,2867.45416,KBOI,"Warmwater (e.g., bass)",40.3,Cold front – slow retrieves deep.,Falling
+2025-03-31,19:53,42.980000000000004,6.773759739495929,1004.4,Clear,12.96,20,30.92,9.997862483098704,CLR,,,38.191330410404,,2867.45416,KBOI,"Warmwater (e.g., bass)",36.5,Cold front – slow retrieves deep.,Falling
+2025-03-31,19:33,46.04,5.780703623272153,1004.4,Mostly Clear,16.56,360,30.92,9.997862483098704,FEW,,,41.022236923975,,2867.45416,KBOI,"Warmwater (e.g., bass)",37.8,Cold front – slow retrieves deep.,Falling
+2025-03-31,18:53,50.0,3.7078986847052713,1004.4,Mostly Cloudy,12.96,240,24.98,9.997862483098704,BKN,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",43.5,Cold front – slow retrieves deep.,Falling
+2025-03-31,17:53,48.02,4.64756255139557,1004.8,Mostly Clear,11.16,220,28.04,9.997862483098704,FEW,,,44.83441213619,,2867.45416,KBOI,"Warmwater (e.g., bass)",42.4,Cold front – slow retrieves deep.,Rising
+2025-03-31,16:53,48.02,5.2264008302293306,1005.1,Partly Cloudy,11.16,100,30.92,9.997862483098704,SCT,,,44.83441213619,,2867.45416,KBOI,"Warmwater (e.g., bass)",42.4,Cold front – slow retrieves deep.,Rising
+2025-03-31,15:53,44.96,6.911061583080586,1006.1,Clear,5.4,90,33.98,9.997862483098704,CLR,,,43.620302866989,,2867.45416,KBOI,"Warmwater (e.g., bass)",42.3,Cold front – slow retrieves deep.,Rising
+2025-03-31,14:53,42.08,8.384422223467467,1006.1,Cloudy,0,0,35.06,9.997862483098704,OVC,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",42.1,Cold front – slow retrieves deep.,Falling
+2025-03-31,13:53,39.02,9.453172144853053,1006.1,Mostly Cloudy,7.56,50,33.98,9.997862483098704,FEW,,,35.56638704887,,2867.45416,KBOI,"Warmwater (e.g., bass)",35.2,Cold front – slow retrieves deep.,Falling
+2025-03-31,13:19,37.94,10.84194720590728,1006.8,Cloudy,11.16,60,35.96,9.997862483098704,FEW,,,32.695351848062,,2867.45416,KBOI,"Warmwater (e.g., bass)",32.4,Cold front – slow retrieves deep.,Rising
+2025-03-31,12:15,,,1007.1,Light Snow and Fog/Mist,,,33.08,3.001222858506323,SCT,,,,0.0,2867.45416,KBOI,"Warmwater (e.g., bass)",60,Marginal conditions.,Rising
+2025-03-31,11:55,,,1007.1,Light Rain and Squalls,,,32.0,7.997047244094488,FEW,,,,0.0,2867.45416,KBOI,"Warmwater (e.g., bass)",60,Marginal conditions.,Falling
+2025-03-31,11:53,44.96,6.666640471326272,1007.1,Squalls,,,33.08,8.997454863596596,FEW,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",45.0,Cold front – slow retrieves deep.,Falling
+2025-03-31,10:53,48.02,5.2264008302293306,1005.4,Cloudy,20.52,120,30.92,9.997862483098704,OVC,,,42.710510896967,,2867.45416,KBOI,"Warmwater (e.g., bass)",37.8,Cold front – slow retrieves deep.,Falling
+2025-03-31,09:53,46.94,5.767014106862729,1006.1,Cloudy,16.56,110,32.0,9.997862483098704,SCT,,,42.14026864209,,2867.45416,KBOI,"Warmwater (e.g., bass)",38.7,Cold front – slow retrieves deep.,Rising
+2025-03-31,08:53,46.04,6.038432444263868,1006.4,Cloudy,11.16,130,32.0,9.997862483098704,BKN,,,42.449953865308004,,2867.45416,KBOI,"Warmwater (e.g., bass)",40.5,Cold front – slow retrieves deep.,Rising
+2025-03-31,07:53,44.06,6.688150477268015,1006.4,Mostly Cloudy,16.56,110,32.0,9.997862483098704,FEW,,,38.562567144122,,2867.45416,KBOI,"Warmwater (e.g., bass)",35.8,Cold front – slow retrieves deep.,Falling
+2025-03-31,06:53,42.980000000000004,7.075763306036367,1006.8,Cloudy,18.36,130,32.0,9.997862483098704,OVC,,,36.800918584496,,2867.45416,KBOI,"Warmwater (e.g., bass)",33.8,Cold front – slow retrieves deep.,Rising
+2025-03-31,05:53,42.980000000000004,7.389643762189896,1006.8,Partly Cloudy,9.36,120,33.08,9.997862483098704,SCT,,,39.42220608116,,2867.45416,KBOI,"Warmwater (e.g., bass)",38.3,Cold front – slow retrieves deep.,Falling
+2025-03-31,04:53,42.980000000000004,7.389643762189896,1006.8,Clear,14.76,140,33.08,9.997862483098704,CLR,,,37.681211802768,,2867.45416,KBOI,"Warmwater (e.g., bass)",35.6,Cold front – slow retrieves deep.,Falling
+2025-03-31,03:53,42.980000000000004,7.660572568324159,1007.1,Mostly Cloudy,12.96,140,33.98,9.997862483098704,BKN,,,38.191330410404,,2867.45416,KBOI,"Warmwater (e.g., bass)",36.5,Cold front – slow retrieves deep.,Rising
+2025-03-31,02:53,44.06,7.55918375001357,1006.8,Cloudy,18.36,130,35.06,9.997862483098704,OVC,,,38.153716768750996,,2867.45416,KBOI,"Warmwater (e.g., bass)",34.9,Cold front – slow retrieves deep.,Falling
+2025-03-31,01:53,44.96,6.911061583080586,1006.4,Mostly Cloudy,,,33.98,9.997862483098704,BKN,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",45.0,Cold front – slow retrieves deep.,Falling
+2025-03-31,00:53,48.02,5.910635211590898,1006.1,,24.12,120,33.98,9.997862483098704,,,,42.111215232311,,2867.45416,KBOI,"Warmwater (e.g., bass)",36.0,Cold front – slow retrieves deep.,Falling
+2025-03-30,23:53,48.02,5.910635211590898,1006.1,Clear,27.72,120,33.98,9.997862483098704,CLR,,,41.582889342219,,2867.45416,KBOI,"Warmwater (e.g., bass)",34.2,Cold front – slow retrieves deep.,Falling
+2025-03-30,22:53,48.92,5.8967442844836535,1006.1,,,,35.06,9.997862483098704,,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",48.9,Cold front – slow retrieves deep.,Falling
+2025-03-30,21:53,48.02,6.913309756555009,1006.8,Cloudy,,,37.94,9.997862483098704,FEW,,,,0.0,2867.45416,KBOI,"Warmwater (e.g., bass)",48.0,Cold front – slow retrieves deep.,Rising
+2025-03-30,20:53,51.98,4.135724273195017,1006.8,Cloudy,22.32,110,30.02,9.997862483098704,BKN,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",40.8,Cold front – slow retrieves deep.,Falling
+2025-03-30,19:53,53.06,4.438165234549927,1007.1,Mostly Cloudy,16.56,130,33.08,9.997862483098704,BKN,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",44.8,Cold front – slow retrieves deep.,Rising
+2025-03-30,18:53,51.98,4.480774782831014,1007.8,Cloudy,16.56,140,32.0,9.997862483098704,FEW,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",43.7,Cold front – slow retrieves deep.,Rising
+2025-03-30,17:53,55.94,2.773324607708939,1007.8,Cloudy,14.76,150,24.98,9.997862483098704,BKN,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",48.6,Cold front – slow retrieves deep.,Falling
+2025-03-30,16:53,55.94,2.6711699848990893,1007.8,Mostly Cloudy,27.72,120,24.08,9.997862483098704,BKN,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",42.1,Cold front – slow retrieves deep.,Falling
+2025-03-30,13:53,53.06,3.7534907614200903,1009.8,Clear,22.32,120,28.94,9.997862483098704,CLR,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",41.9,Cold front – slow retrieves deep.,Rising
+2025-03-30,12:53,51.08,4.3236163467396835,1011.2,Clear,16.56,130,30.02,9.997862483098704,CLR,,,,,2867.45416,KBOI,"Warmwater (e.g., bass)",42.8,Cold front – slow retrieves deep.,Rising
+2025-03-30,10:53,44.96,6.666640471326272,1012.2,Clear,20.52,120,33.08,9.997862483098704,CLR,,,38.842908357778,,2867.45416,KBOI,"Warmwater (e.g., bass)",34.7,Cold front – slow retrieves deep.,Rising
+2025-03-30,08:53,37.04,9.306205118632276,1012.5,Clear,16.56,130,30.92,9.997862483098704,CLR,,,29.841919742824,,2867.45416,KBOI,"Warmwater (e.g., bass)",28.8,Cold front – slow retrieves deep.,Rising
+2025-03-30,07:53,33.98,10.623918699857008,1012.5,Clear,14.76,130,30.02,9.997862483098704,CLR,,,26.602812938306002,,2867.45416,KBOI,"Warmwater (e.g., bass)",26.6,Cold front – slow retrieves deep.,Falling
+2025-03-30,06:53,33.08,10.691959531534355,1012.5,Clear,12.96,130,28.94,9.997862483098704,CLR,,,26.129340235965,,2867.45416,KBOI,"Warmwater (e.g., bass)",26.6,Cold front – slow retrieves deep.,Falling
+2025-03-30,05:53,32.0,11.363526424269226,1012.5,Clear,9.36,140,28.94,9.997862483098704,CLR,,,26.376870043030998,,2867.45416,KBOI,"Warmwater (e.g., bass)",27.3,Cold front – slow retrieves deep.,Falling
+2025-03-30,04:53,32.0,11.874887326360119,1012.9,Clear,12.96,120,30.02,9.997862483098704,CLR,,,24.81348676239,,2867.45416,KBOI,"Warmwater (e.g., bass)",25.5,Cold front – slow retrieves deep.,Rising
