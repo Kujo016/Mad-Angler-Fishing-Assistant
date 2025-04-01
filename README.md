@@ -1,95 +1,45 @@
-# 🐟 Mad Angler Weather & Fishing Assistant
+# Mad Angler Fishing Assistant
 
-A weather and fishing assistant script that uses live NOAA data and estimates fishing conditions, water temperature, and fish activity, complete with plots and a GUI display.
+This is a tool that retrieves weather data from NOAA, estimates fishing conditions, and displays them through a GUI interface. It also includes two batch files to automatically handle Python installation (on Windows) and then run the application.
 
-## 📦 Requirements
+## Getting Started (Windows)
 
-- Python 3.10+ recommended
-- Internet connection (for NOAA API and location data)
-- Works on Windows, macOS, and Linux
+1. **Download the Project**
 
----
+   - If you’re on GitHub, click the green “Code” button and select “Download ZIP.”
+   - Extract the ZIP contents to any folder on your PC.
 
-## 🔧 Installation
+2. **Run the Setup**
 
-### 1. Install Python
+   - In the extracted folder, find the file named `setup.bat`.
+   - **Double-click `setup.bat`** to:
+     - Check if Python is installed.
+     - (If not installed) Download and install Python (user-level by default).
+     - Install or upgrade all required Python libraries (pandas, requests, etc.).
+   - If the installation fails due to permissions, **right-click** `setup.bat` and select **“Run as administrator”**. This ensures it can install Python system-wide, if you choose that option.
 
-Make sure you have Python installed.
+3. **Run the Application**
 
-#### ✅ Windows / macOS:
+   - After the setup completes, run `run.bat`.
+   - This will:
+     1. Launch Python.
+     2. Open `main.py`.
+     3. Show a GUI window that fetches your local weather data, generates plots, and displays them in a table.
 
-- Go to the official Python website: https://www.python.org/downloads/
-- Download the latest **Python 3.x** version for your OS.
-- During installation, check **"Add Python to PATH"**.
-- Verify it installed correctly:
+4. **Output Files**
 
-```bash
-python --version
-```
+   - The script automatically creates a subdirectory (like `plots/2025-04-01/10-30/`) or similar, where it saves:
+     - `weather_data.csv`
+     - `temperature_plot.png`
+     - `pressure_plot.png`
+     - `humidity_plot.png`
+     - `wind_speed_plot.png`
+     - A summary chart (`chart_plot.png`) and/or a spiral GIF (`spiral_chart.gif`) if configured.
 
-#### ✅ Linux (Debian/Ubuntu):
+## Troubleshooting
 
-```bash
-sudo apt update
-sudo apt install python3 python3-pip
-```
+- **Silent install fails**: If Python can’t install for all users, run `setup.bat` as admin. 
+- **No data**: Check internet connectivity; NOAA and geocoder calls require a live connection.
+- **Missing DLLs**: If your code references a CUDA or DLL file, ensure it’s present in `bin/` or update the path in your scripts.
 
----
-
-### 2. Clone This Repository
-
-```bash
-git clone https://github.com/Kujo016/Mad-Angler-Fishing-Assistant
-cd YOUR_REPO_NAME
-```
-
----
-
-### 3. Install Required Python Packages
-
-Install dependencies using `pip`:
-
-```bash
-pip install requests geocoder pandas matplotlib tzlocal pytz
-```
-
----
-
-## 🚀 How to Run
-Open the python script main.py and enter your email in the "User-Agent": "weather-data-retrieval-script (example@example.com)"
-Run the main script from your terminal or command prompt:
-
-```bash
-python main.py
-```
-
-This will:
-- Detect your location
-- Fetch weather and fishing data
-- Save a CSV and plot images in the `/plots/` folder
-- Launch a graphical interface with the latest report
-
----
-
-## 🗂 Output Files
-
-Saved to:  
-`/plots/YYYY-MM-DD/HH-MM/`
-
-Includes:
-- `weather_data.csv`
-- `temperature_plot.png`
-- `pressure_plot.png`
-- `humidity_plot.png`
-- `wind_speed_plot.png`
-- `chart_plot.png`
-
----
-
-## 🐛 Troubleshooting
-
-If something goes wrong:
-- Ensure you're connected to the internet
-- Make sure you installed all required libraries
-- Check for permission issues creating folders
-- Try running with admin privileges if needed
+Enjoy and tight lines!
