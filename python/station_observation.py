@@ -7,7 +7,6 @@ import math
 from python import fish_behavior as fb
 from python import file_handler
 from python import my_math
-from python import trajectory as traj
 
 
 # Set a proper User-Agent for NOAA API requests
@@ -126,7 +125,7 @@ def retrieve_observations(station_id, max_results=50):
 
 
 
-def gather_data(dll_path, plots_dir, csv_filename, input_path, output_path, output_dir):
+def gather_data(dll_path, plots_dir, csv_filename, output_dir):
     lat, lon = get_location()
     station_id = get_station(lat, lon)
     data_list = retrieve_observations(station_id)
@@ -137,7 +136,6 @@ def gather_data(dll_path, plots_dir, csv_filename, input_path, output_path, outp
     # Step 4: Save full data for display, and single row for charting/trajectory       
     file_handler.save_to_csv(data_list, filename=csv_filename)
     file_handler.parse_weather_csvs(plots_dir, dll_path)
-    traj.compute_trajectory_from_bin(dll_path, input_path, output_path)
     
     print(f"[INFO] Saving all output to: {output_dir}")
     return data_list

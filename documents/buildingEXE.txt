@@ -1,6 +1,0 @@
-pip install pyinstaller
-
-pyinstaller --onefile --windowed initGUI.py
-
-
-exe will be in dist/

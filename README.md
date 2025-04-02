@@ -1,172 +1,45 @@
-# 🐟 Mad Angler Weather & Fishing Assistant
+# Mad Angler Fishing Assistant
 
-A weather and fishing assistant script that uses live NOAA data and estimates fishing conditions, water temperature, and fish activity, complete with plots, code analysis, and a GUI display. Now includes a C++/CUDA backend for scanning source files and tagging relevant code patterns.
+This is a tool that retrieves weather data from NOAA, estimates fishing conditions, and displays them through a GUI interface. It also includes two batch files to automatically handle Python installation (on Windows) and then run the application.
 
----
+## Getting Started (Windows)
 
-## 📦 Requirements
+1. **Download the Project**
 
-### Python Environment
-- Python 3.10+ recommended
-- Internet connection (for NOAA API and IP-based geolocation)
+   - If you’re on GitHub, click the green “Code” button and select “Download ZIP.”
+   - Extract the ZIP contents to any folder on your PC.
 
-### Platform Support
-- ✅ Windows (full GUI + CUDA support)
-- ⚠️ Linux/macOS (weather module works, but CUDA integration not supported yet)
+2. **Run the Setup**
 
----
+   - In the extracted folder, find the file named `setup.bat`.
+   - **Double-click `setup.bat`** to:
+     - Check if Python is installed.
+     - (If not installed) Download and install Python (user-level by default).
+     - Install or upgrade all required Python libraries (pandas, requests, etc.).
+   - If the installation fails due to permissions, **right-click** `setup.bat` and select **“Run as administrator”**. This ensures it can install Python system-wide, if you choose that option.
 
-## 🔧 Installation
+3. **Run the Application**
 
-### 1. Install Python
+   - After the setup completes, run `run.bat`.
+   - This will:
+     1. Launch Python.
+     2. Open `main.py`.
+     3. Show a GUI window that fetches your local weather data, generates plots, and displays them in a table.
 
-#### ✅ Windows / macOS:
-- Download from: https://www.python.org/downloads/
-- Check **"Add Python to PATH"** during installation.
+4. **Output Files**
 
-```bash
-python --version
-```
+   - The script automatically creates a subdirectory (like `plots/2025-04-01/10-30/`) or similar, where it saves:
+     - `weather_data.csv`
+     - `temperature_plot.png`
+     - `pressure_plot.png`
+     - `humidity_plot.png`
+     - `wind_speed_plot.png`
+     - A summary chart (`chart_plot.png`) and/or a spiral GIF (`spiral_chart.gif`) if configured.
 
-#### ✅ Linux (Debian/Ubuntu):
-```bash
-sudo apt update
-sudo apt install python3 python3-pip
-```
+## Troubleshooting
 
----
+- **Silent install fails**: If Python can’t install for all users, run `setup.bat` as admin. 
+- **No data**: Check internet connectivity; NOAA and geocoder calls require a live connection.
+- **Missing DLLs**: If your code references a CUDA or DLL file, ensure it’s present in `bin/` or update the path in your scripts.
 
-### 2. Clone This Repository
-
-```bash
-git clone https://github.com/Kujo016/Mad-Angler-Fishing-Assistant
-cd Mad-Angler-Fishing-Assistant
-```
-
----
-
-### 3. Install Required Python Packages
-
-```bash
-pip install requests geocoder pandas matplotlib tzlocal pytz
-```
-
----
-
-## ⚙️ C++ / CUDA Backend (for Code Analysis)
-
-This tool also supports analyzing code directories using GPU acceleration (CUDA) and tagging logic.
-
-### 🖥️ Requirements
-
-- ✅ Windows 10 or later
-- ✅ Visual Studio 2019+ with Desktop C++ workload
-- ✅ CUDA Toolkit v12.8
-- ✅ NVIDIA GPU with compute capability
-- ✅ vcpkg (for dependencies like `nlohmann/json`)
-
----
-
-### 🔨 Build the DLL
-
-1. Open **Developer Command Prompt for Visual Studio**
-2. Navigate to the repo directory
-3. Build the DLL with this command:
-
-```bash
-nvcc -o bin/mylib_cud.dll -shared -Xcompiler "/EHsc /LD" dir_tag.cpp kernel.cu -I. -I"path\to\vcpkg\installed\x64-windows\include" -L"path\to\vcpkg\installed\x64-windows\lib"
-```
-
-Replace the `path\to\...` parts with your actual vcpkg paths.
-
-> ⚠️ Make sure `kernel.cuh` and `tag_dir.h` are in the include path.
-
----
-
-## 🚀 Run the Full Program (GUI + Weather + Code Scan)
-
-Use:
-
-```bash
-python python/InitGUI.py
-```
-
-This will:
-- Detect your current location
-- Retrieve NOAA weather observations
-- Estimate fishing behavior and water temp
-- Display conditions and plots in a GUI
-- Trigger the C++/CUDA backend to scan your `/AI/targetFile/` folder
-- Save analysis output to:
-  - `AI/Reports/code_summary_results.json`
-  - `AI/Reports/directory_structure_full.txt`
-
----
-
-## 🗂 Output Files
-
-Saved in:
-
-```
-AI/targetFile/plots/YYYY-MM-DD/HH-MM/
-```
-
-Includes:
-- `weather_data.csv`
-- `temperature_plot.png`
-- `pressure_plot.png`
-- `humidity_plot.png`
-- `wind_speed_plot.png`
-- `chart_plot.png`
-
----
-
-## 🧠 Code Summary Output
-
-Saved in:
-
-```
-AI/Reports/
-├── code_summary_results.json         # Tags and counts for each file
-└── directory_structure_full.txt      # Directory map and total file sizes
-```
-
----
-
-## 🐛 Troubleshooting
-
-- Check internet connection for NOAA API
-- Run as admin if folder creation fails
-- Make sure Python, CUDA, and DLL paths are correct
-- Ensure DLL is named `mylib_cud.dll` and placed in `/bin/`
-
----
-
-## 🗂 Folder Structure Overview
-
-```
-your_project/
-├── AI/
-│   ├── Reports/
-│   └── targetFile/
-│       └── plots/
-├── bin/
-│   └── mylib_cud.dll
-├── tags/
-│   ├── tags.txt
-│   └── code_tags.txt
-├── python/
-│   ├── InitGUI.py
-│   ├── main.py
-│   └── list_directory_full.py
-├── dir_tag.cpp
-├── tag_dir.h
-├── kernel.cu
-├── kernel.cuh
-```
-
----
-
-## 🙌 Author
-
-**Joshua Kujawa** – Mad Angler Publishing
+Enjoy and tight lines!

@@ -22,13 +22,9 @@ if __name__ == "__main__":
     output_dir = os.path.join('AI', 'targetFile', 'plots', date_str, time_str)
     os.makedirs(output_dir, exist_ok=True)
     csv_filename = os.path.join(output_dir, 'weather_data.csv')
-
-    #Prepare trajectory file paths
-    input_path = os.path.join(output_dir, "weather_data.bin")
-    output_path = os.path.join(output_dir, "trajectory_data.bin")
     
+    #Gather Data
+    station_observation.gather_data(dll_path, plots_dir, csv_filename, output_dir)
 
     #Gather Data
-    station_observation.gather_data(dll_path, plots_dir, csv_filename, input_path, output_path, output_dir)
-
-    my_display.deploy(script_dir, dll_path, plots_dir, output_dir, date_str, time_str, csv_filename, input_path, output_path)
+    my_display.deploy(script_dir, plots_dir, dll_path, output_dir, date_str, time_str, csv_filename)

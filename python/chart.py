@@ -6,7 +6,6 @@ from matplotlib.patches import Circle
 from python import  weather
 from python import  my_math
 from python import file_handler
-from python import trajectory as traj
 
 
 def chart_gif(gif_dir):
@@ -57,10 +56,10 @@ def chart_gif(gif_dir):
     t_steps = 100
     for t in range(t_steps):
         point = my_math.spiral_position_within_quadrant(
-            direction_vector,
+            current_temp,
             current_humidity,
             current_pressure,
-            current_temp,
+            direction_vector,
             current_wind,
             t=t / 10.0
         )

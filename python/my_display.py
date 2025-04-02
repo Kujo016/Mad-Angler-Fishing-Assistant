@@ -1,12 +1,10 @@
 import tkinter as tk
 from tkinter import ttk, scrolledtext
 from tkinter import messagebox
-import subprocess
 from python import station_observation
 from python import file_handler
 from python import my_math
 from python import  chart
-from python import  trajectory as traj
 from python import  fish_behavior as fb
 
 
@@ -53,37 +51,14 @@ def display_data(window):
         values = [row[col] for col in columns]
         tree.insert('', tk.END, values=values)
 
-def check_gpus():
-    try:
-        result = subprocess.run(
-            ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"], 
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.PIPE, 
-            text=True
-        )
-
-        if result.returncode != 0 or not result.stdout.strip():
-            raise RuntimeError(result.stderr.strip() or "No GPU found.")
-
-        gpus = result.stdout.strip().split('\n')
-        gpu_info = "\n".join([f"GPU {i}: {gpu}" for i, gpu in enumerate(gpus)])
-
-        return True, gpu_info
-
-    except Exception as e:
-        return False, f"GPU check failed: {str(e)}"
-
-def show_popup(message):
-    title = "GPU Check! "
+def dummy_def():
     root = tk.Tk()
-    root.withdraw()
-    messagebox.showinfo(title, message)
+    root.withdraw()  # Hide the main window
+    messagebox.showinfo("GPU Version Only")
     root.destroy()
 
-def deploy(script_dir, dll_path, plots_dir, output_dir, date_str, time_str, csv_filename, input_path, output_path):
+def deploy(script_dir, dll_path, plots_dir, output_dir, date_str, time_str, csv_filename):
     try:
-
-        gpu_state, gpu_info = check_gpus()
 
         # Step 7: GUI setup
         root = tk.Tk()
@@ -101,7 +76,7 @@ def deploy(script_dir, dll_path, plots_dir, output_dir, date_str, time_str, csv_
         title.pack(pady=10)
 
         tk.Button(left_frame, text="Gather Data", width=20,
-                  command=lambda: station_observation.gather_data(dll_path, plots_dir, csv_filename, input_path, output_path, output_dir)).pack(pady=5)
+                  command=lambda: station_observation.gather_data(dll_path, plots_dir, csv_filename, output_dir)).pack(pady=5)
 
         tk.Button(left_frame, text="Display Data", width=20,
                   command=lambda: display_data(content_frame)).pack(pady=5)
@@ -111,33 +86,23 @@ def deploy(script_dir, dll_path, plots_dir, output_dir, date_str, time_str, csv_
 
         tk.Button(left_frame, text="Run Chaos Chart", width=20,
                   command=lambda: chart.chart_run( output_dir, date_str, time_str)).pack(pady=5)
+
+        tk.Button(left_frame, text="Chaos Trajectory", width=20,
+                  command=lambda: dummy_def()).pack(pady=5)
         
+        tk.Button(left_frame, text="Get Predictions", width=20,
+                  command=lambda: dummy_def()).pack(pady=5)
+
         tk.Button(left_frame, text="Generate Chart GIF", width=20,
                   command=lambda: chart.chart_gif(output_dir)).pack(pady=5)
-        if gpu_state == True:
-            tk.Button(left_frame, text="Chaos Trajectory", width=20,
-                    command=lambda: traj.open_trajectory(plots_dir, dll_path, input_path, output_path)).pack(pady=5)
-            
-            tk.Button(left_frame, text="Get Predictions", width=20,
-                    command=lambda: traj.get_prediction(plots_dir, dll_path, input_path, output_path, date_str, time_str) ).pack(pady=5)
+        
+        tk.Button(left_frame, text="Analyze Bite Patterns", width=20,
+                  command=lambda: dummy_def()).pack(pady=5)
 
-            tk.Button(left_frame, text="Analyze Bite Patterns", width=20,
-                    command=lambda: fb.ana_bite_pat(plots_dir, dll_path)).pack(pady=5)
+        tk.Button(left_frame, text="Generate JSON & Report", width=20,
+                  command=lambda: dummy_def()).pack(pady=5)
 
-            tk.Button(left_frame, text="Generate JSON & Report", width=20,
-                    command=lambda: file_handler.run_cpp_function(script_dir, dll_path)).pack(pady=5)
-        else:
-            tk.Button(left_frame, text="Chaos Trajectory", width=20,
-                    command=lambda: show_popup(gpu_info)).pack(pady=5)
-            
-            tk.Button(left_frame, text="Get Predictions", width=20,
-                    command=lambda: show_popup(gpu_info)).pack(pady=5)
 
-            tk.Button(left_frame, text="Analyze Bite Patterns", width=20,
-                    command=lambda: show_popup(gpu_info)).pack(pady=5)
-
-            tk.Button(left_frame, text="Generate JSON & Report", width=20,
-                    command=lambda: show_popup(gpu_info)).pack(pady=5)
         root.mainloop()
         print(f"END PROGRAM")
 
