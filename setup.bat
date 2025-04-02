@@ -7,6 +7,8 @@ REM and installs Python silently, then installs or upgrades
 REM the required libraries via pip.
 REM *************************************************************
 
+cd /d %~dp0
+
 echo Checking if Python is installed...
 python --version >nul 2>&1
 
@@ -16,7 +18,7 @@ IF %ERRORLEVEL% NEQ 0 (
     
     IF EXIST python-installer.exe (
         echo Installing Python 3.11.2 (silent mode)...
-        start /wait python-installer.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
+        start /wait python-installer.exe /quiet PrependPath=1 Include_test=0
         del python-installer.exe
     ) ELSE (
         echo Failed to download the Python installer. Exiting.
